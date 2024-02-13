@@ -1,21 +1,20 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { axiosPost } from '../service/axios';
 import { useNavigate } from 'react-router-dom';
 
 
 function Signin(props) {
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const navigate = useNavigate()
 
-    const navigate = useNavigate()
 
-    const emailRef = useRef(null)
-    const passwordRef = useRef(null)
-
-   
+  const emailRef = useRef(null)
+  const passwordRef = useRef(null)
+  
+    
 
 const submit = (e) =>{
     e.preventDefault()
-console.log( emailRef.current.value);
-console.log( passwordRef.current.value);
 
 axiosPost.post("login",
     {
@@ -24,12 +23,13 @@ axiosPost.post("login",
     
 })
 .then(function (response) {
-    console.log(response);
-    localStorage.setItem("token", response.data.token )
+    setToken(localStorage.setItem("token", JSON.stringify(response.data.token)))
     navigate("/")
   })
   .catch(function (error) {
     console.log(error);
+
+    
   })
 
 
@@ -38,6 +38,8 @@ axiosPost.post("login",
 emailRef.current.value = ("")
 passwordRef.current.value = ("")
 }
+
+
 
     return (
       <div className=" flex flex-col  justify-center items-center w-[600px] mx-auto h-screen p-3">
